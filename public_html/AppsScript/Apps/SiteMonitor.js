@@ -1,6 +1,8 @@
 /**
+*
 * Monitor your sites and track their up time with response codes.
-* 
+* @see: http://greenido.wordpress.com/2014/04/29/monitor-your-site-with-apps-script/
+*
 */ 
 
 //

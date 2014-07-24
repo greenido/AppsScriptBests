@@ -1,10 +1,12 @@
 AppsScriptBests
 ===============
 
-A little repo to keep track on GS (Apps script)
+A little repo to keep track on GS (Apps script).
+See: http://greenido.wordpress.com/?s=apps+script to read more about it.
 
 <h2>Todo - Create a list of the current components</h2>
 <h2>Todo - build a wish list with ideas for libs/components</h2>
+
 <h3>Other Sources</h3>
 <ul>
   <li><a href="https://sites.google.com/site/scriptsexamples/custom-methods/2d-arrays-library">2D Arrays</a></li>
