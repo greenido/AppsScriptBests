@@ -1,37 +1,28 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-
+//
+// Search, Fetch and save images from Instagram by tags.
+//
 function fetchInstagram() {
-
-  //Choose your favourite tag
+  // Feel free to change this one
   var TAG_NAME = 'snowboarding';
 
-  //Your client Id which you got by registering your client for Instagram API
-  var CLIENT_ID = 'TODO';
-
-  //Endpoint url to fetch photos information,
-  //note that we have used TAG_NAME and CLIENT_ID with the endpoint URL
+  // You need to replace todo with your client-id
+  // Get it at: http://instagram.com/developer/clients/manage/
+  var CLIENT_ID = 'todo';
   var url = 'https://api.instagram.com/v1/tags/' + TAG_NAME + '/media/recent?client_id=' + CLIENT_ID;
 
-  //when there is a url to fetch photo details, fetch the details from API
-  while (url) {
+  // fetch the top 10 results
+  while (i < 10) {
     //let us fetch the details from API. This will give you the details of photos and URL
     var response = UrlFetchApp.fetch(url).getContentText();
-
-    //pase the JSON string data to JSON
     var responseObj = JSON.parse(response);
-
-    //get photo data
     var photoData = responseObj.data;
 
     //iterate over this data
     for (var i in photoData) {
       var imageUrl = photoData[i].images.standard_resolution.url;
-      fetchImageToDrive_(imageUrl);
+      Logger.log("image url: "+imageUrl);
+      //Todo: open this comment if you wish to save the file: fetchImageToDrive_(imageUrl);
     }
 
     //Get the url of the next page
@@ -39,11 +30,13 @@ function fetchInstagram() {
   }
 }
 
+//
+// fetch and save the file into drive
+//
 function fetchImageToDrive_(imageUrl) {
-  //Fetch image blob
   var imageBlob = UrlFetchApp.fetch(imageUrl).getBlob();
-  //Create image file in drive
+  // Create image file in drive
   var image = DriveApp.createFile(imageBlob);
-  //return the URL of the newly created image in drive
+  // return the URL of the newly created image in drive so we could log it.
   return image.getUrl();
 }
