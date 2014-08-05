@@ -3,7 +3,6 @@
 * Fetch stats on videos and channel by using YT APIs.
   1. It using the ATOM feeds - v1.
   2. For the channel we are using the v3 version of the API.
-
 * @Author: Ido Green
 * @Date: Aug 2014
 *
@@ -27,13 +26,10 @@
  * spreadsheet with the API response, then locks columns and rows that will
  * define a chart axes. A stacked column chart is added for the spreadsheet.
  
- 
  @see: 
  * https://developers.google.com/youtube/analytics/v1/code_samples/apps-script
  * https://developers.google.com/youtube/analytics/sample-requests#channel-time-based-reports
  * https://developers.google.com/apis-explorer/#p/youtubeAnalytics/v1/youtubeAnalytics.reports.query
- 
- 
  */
 function spreadsheetAnalytics() {
   // Get the channel ID
@@ -191,9 +187,8 @@ function fetchAllData() {
   
   var end = new Date().getTime();
   var execTime = (end - start) / 1000;
-  var htmlApp = HtmlService
-  .createHtmlOutput('<h2>Done updating!</h2><p>It took us: '+ execTime + 'sec. to update: ' +
-                    (i+1) + ' videos</p>' + errMsg).setTitle('GStudio Rock').setWidth(450).setHeight(450);
+  var htmlApp = HtmlService.createHtmlOutput('<h2>Done updating!</h2><p>It took us: ' + execTime + 
+      'sec. to update: ' + (i+1) + ' videos</p>' + errMsg).setTitle('GStudio Rock').setWidth(450).setHeight(450);
    SpreadsheetApp.getActiveSpreadsheet().show(htmlApp);
 }
 
