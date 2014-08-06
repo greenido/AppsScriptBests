@@ -241,3 +241,242 @@ function onOpen() {
                 ];
   spreadsheet.addMenu("YT Dashboard", entries);
 };
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////// Version 2.0 with YT Analytics --> should move it to another file ///////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+* GStudio Stats
+* Fetch stats on our videos by using YT ATOM feeds.
+*
+* @Author: Ido Green
+* @Date: July 2014
+*
+* @see: https://github.com/greenido/AppsScriptBests
+* https://developers.google.com/youtube/analytics/v1/code_samples/apps-script
+* https://developers.google.com/youtube/analytics/sample-requests#channel-time-based-reports
+* https://developers.google.com/apis-explorer/#p/youtubeAnalytics/v1/youtubeAnalytics.reports.query
+
+* Older doc on working with YT API:
+* https://docs.google.com/a/google.com/document/d/1Htgm9LieOWe-DHxAWzpKxc5qfjNZm79jGSyy9BXl1Xc/edit
+*/
+
+
+
+function testGetVideoEstimatedMinutesWatched() {
+  var coltPerf = getVideoEstimatedMinutesWatched('zVK6TKSx1lU');
+  Logger.log("colt perf video: \n" + coltPerf);
+}
+
+//
+// Fetch the estimated Minutes Watched on specific video
+// ToDo:
+// gain more metrics for example: views,estimatedMinutesWatched,averageViewDuration,likes,dislikes,shares
+function getVideoEstimatedMinutesWatched(videoId) {
+  var myChannels = YouTube.Channels.list('id', {mine: true});
+  var channel = myChannels.items[0];
+  var channelId = channel.id;
+  
+  if (channelId) {
+    var today = new Date();
+    var monthAgo12 = new Date();
+    monthAgo12.setMonth(today.getMonth() - 11);
+    var todayFormatted = Utilities.formatDate(today, 'UTC', 'yyyy-MM-dd')
+    var MonthAgo12Formatted = Utilities.formatDate(monthAgo12, 'UTC', 'yyyy-MM-dd');
+
+    var analyticsResponse = YouTubeAnalytics.Reports.query(
+      'channel==' + channelId,
+       MonthAgo12Formatted,
+       todayFormatted,
+      'views,estimatedMinutesWatched',
+      {
+        dimensions: 'video',
+        filters: 'video==' + videoId
+      });
+    
+    //Logger.log("analytics for " + videoId + ": \n " +analyticsResponse.rows);
+    return analyticsResponse.rows[0];
+  }
+  else {
+    return "N/A";
+  }
+}
+
+//
+// We will use this function inorder to extract the IDs of the video out of YT links.
+// It's working with both long/short version of youtube.
+//
+// The function works on column J as the source and column K as the output.
+//
+function extractVideoID() {
+  var curSheet  = SpreadsheetApp.getActiveSheet();
+  var ytLinks   = curSheet.getRange("J:J");
+  var totalRows = ytLinks.getNumRows();
+  var ytVal = ytLinks.getValues();
+  // let's run on the rows
+  for (var i = 1; i <= totalRows - 1; i++) {
+    var curLink = ytVal[i][0];
+    var videoID = "";
+    var inx1 = curLink.indexOf('watch?v=') + 8;
+    if (inx1 == 7) {
+      // check if it's the short format: http://youtu.be/75EuHl6CSTo
+      if (curLink != "" && curLink.indexOf("youtu.be") > 0) {
+        videoID = curLink.substr(16, curLink.length);  
+      }
+    }
+    else {
+      // we have the link in this format: https://www.youtube.com/watch?v=BuHEhmp47VE
+      var inx2 = curLink.indexOf("&", inx1);
+      
+      if (inx2 > inx1) {
+        videoID = curLink.substr(inx1, inx2-inx1);
+      } else {
+        videoID = curLink.substr(inx1, curLink.length);
+      }
+    }
+    
+    curSheet.getRange("K" + (i+1)).setValue(videoID);
+  }
+  var htmlMsg = HtmlService
+  .createHtmlOutput('<h3>Done - Please check the IDs on Column K:K</h3>').setTitle('GStudio').setWidth(450).setHeight(300);
+  SpreadsheetApp.getActiveSpreadsheet().show(htmlMsg);
+}
+
+//
+// A function we will use to run on a daily bases to refresh the stats
+//
+function fetchDataQ1Q2Q3() {
+
+  var q3 = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Q3 - 2014");
+  Logger.log("== Working on " + q3.getName());
+  fetchAllData(q3);
+
+  var q2 = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Q2 - 2014");
+  Logger.log("== Working on " + q2.getName());
+  fetchAllData(q2);
+  
+  var q1 = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Q1 - 2014");
+  Logger.log("== Working on " + q1.getName());
+  fetchAllData(q1);
+}
+
+//
+// CronJob helper function to by pass the 5min limit that: fetchDataQ1Q2Q3() got us into.
+// 
+function fetchDataCronJobQ1_2014() { 
+  var q = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Q1 - 2014");
+  Logger.log("== Working on " + q.getName());
+  fetchAllData(q);
+}
+function fetchDataCronJobQ2_2014() { 
+  var q = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Q2 - 2014");
+  Logger.log("== Working on " + q.getName());
+  fetchAllData(q);
+}
+function fetchDataCronJobQ3_2014() { 
+  var q = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Q3 - 2014");
+  Logger.log("== Working on " + q.getName());
+  fetchAllData(q);
+}
+//
+// Run on all the rows and according to the video IDs fetch the feed of
+// YT API v1 and extract from it:
+// 1. Date published.
+// 2. Views.
+// 3. Duration in seconds.
+//
+function fetchAllData(cSheet) {
+  var start = new Date().getTime();
+  
+  var curSheet = cSheet;
+  var doWeHaveUser = false;
+  if (curSheet == null || curSheet == undefined) {
+    curSheet = SpreadsheetApp.getActiveSheet();
+    doWeHaveUser = true;
+  }
+  var ytIds = curSheet.getRange("K:K");
+  var totalRows = ytIds.getNumRows();
+  var ytVal = ytIds.getValues();
+  var errMsg = "<h4>Errors on " + curSheet.getName() + " :</h4> <ul>";
+  // let's run on the rows after the header row
+  for (var i = 1; i <= totalRows - 1; i++) {
+    // e.g. for a call: https://gdata.youtube.com/feeds/api/videos/Eb7rzMxHyOk?v=2&prettyprint=true
+    if (ytVal[i] == "") {
+      Logger.log("We stopped at row: " + (i+1));
+      break;
+    }
+    var link = "https://gdata.youtube.com/feeds/api/videos/" + ytVal[i] + "?v=2&prettyprint=true";
+    try {
+      fetchYTdata(link, i+1, curSheet);
+    }
+    catch (err) {
+      errMsg += "<li>Line: " + i + " we could not fetch data for ID: " + ytVal[i] + "</li>";
+      Logger.log("*** ERR: We have issue with " + ytVal[i] + " On line: " + i + " with err: " + JSON.stringify(err));
+    }
+  }
+  
+  var end = new Date().getTime();
+  var execTime = (end - start) / 1000;
+  if (doWeHaveUser) {
+    var htmlApp = HtmlService.createHtmlOutput('<h2>Done updating!</h2><p>It took us: '+ execTime + 'sec. to update: ' +
+                                               (i+1) + ' videos</p>' + errMsg).setTitle('GStudio Rock').setWidth(450).setHeight(450);
+    SpreadsheetApp.getActiveSpreadsheet().show(htmlApp);
+  }
+  
+  // Keeping us updated
+  MailApp.sendEmail("btollefson@google.com", "GDStudio Tracking Daily Updater Status", 
+                    "We've just updated all the stats on GDStudio Tracking (go/gdstudio-tracking). " + errMsg );
+}
+
+
+//
+// Read YT stats data on our videos and fill the sheet with the data:
+// 1. Date published      - Column I
+// 2. Views               - Column Q
+// 3. Duration in seconds - Column R
+//
+function fetchYTdata(url, curRow, ss) {
+  // fetch the estimated min watched
+  var videoId = ss.getRange("K" + curRow).getValue();
+  var stats = getVideoEstimatedMinutesWatched(videoId);
+  var totalViews   = stats[1];
+  var estimatedMin = stats[2];
+  ss.getRange("Q" + curRow).setValue(totalViews);
+  ss.getRange("V" + curRow).setValue(estimatedMin);
+  
+  Logger.log(curRow + ") TotalViews: " + totalViews + " estimatedMin: " + estimatedMin);
+  
+  // OLD CODE just for length of video and publish date: 
+   //var url = 'https://gdata.youtube.com/feeds/api/videos/Eb7rzMxHyOk?v=2&prettyprint=true';
+   var rawData = UrlFetchApp.fetch(url).getContentText();
+   //Logger.log(rawData);
+                           
+  // published <published>2014-05-09T06:22:52.000Z</published>
+   var inx1 = rawData.indexOf('published>') + 10;
+   var inx2 = rawData.indexOf("T", inx1);
+   var publishedDate = rawData.substr(inx1, inx2-inx1);
+  
+   // viewCount='16592'
+//   var inx1 = rawData.indexOf('viewCount') + 11;
+//   var inx2 = rawData.indexOf("'/>", inx1);
+//   var totalViews = rawData.substr(inx1, inx2-inx1);
+  
+   // <yt:duration seconds='100'/>
+   var inx1 = rawData.indexOf('duration seconds') + 18;
+   var inx2 = rawData.indexOf("'/>", inx1);
+   var durationSec = rawData.substr(inx1, inx2-inx1);
+  
+   Logger.log(curRow + ") durationSec: " + durationSec);
+   
+  // update the sheet
+  ss.getRange("I" + curRow).setValue(publishedDate);
+  //ss.getRange("Q" + curRow).setValue(totalViews);
+  ss.getRange("R" + curRow).setValue(durationSec);
+  
+
+  
+ }
+
+
