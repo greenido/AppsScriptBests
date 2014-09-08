@@ -1,8 +1,9 @@
 AppsScriptBests
 ===============
 
-A little repo to keep track on GS (Apps script).
-See: http://greenido.wordpress.com/?s=apps+script to read more about it.
+A little repo to keep track on Google Apps scripts. Mainly, to see what are a good ways to solve common challanges.
+
+See: http://greenido.wordpress.com/?s=apps+script to read more.
 
 <h2>Todo - Create a list of the current components</h2>
 <h2>Todo - build a wish list with ideas for libs/components</h2>
