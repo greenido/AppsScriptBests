@@ -56,16 +56,16 @@ function getElementsByClassName(element, classToFind) {
   descendants.push(element);
   for (i in descendants) {
     var elt = descendants[i].asElement();
-    if (elt != null) {
+    if (elt !== null) {
       var classes = elt.getAttribute('class');
-      if (classes != null) {
+      if (classes !== null) {
         classes = classes.getValue();
-        if (classes == classToFind)
+        if (classes === classToFind)
           data.push(elt);
         else {
           classes = classes.split(' ');
           for (j in classes) {
-            if (classes[j] == classToFind) {
+            if (classes[j] === classToFind) {
               data.push(elt);
               break;
             }
@@ -82,7 +82,7 @@ function getElementsByTagName(element, tagName) {
   var descendants = element.getDescendants();
   for (i in descendants) {
     var elt = descendants[i].asElement();
-    if (elt != null && elt.getName() == tagName)
+    if (elt !== null && elt.getName() === tagName)
       data.push(elt);
   }
   return data;

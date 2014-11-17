@@ -33,7 +33,7 @@ function getDayOfWeek() {
 //
 function isWeekend() {
   var curDay = getDayOfWeek();
-  if ( curDay == 0 || curDay == 6) {
+  if ( curDay === 0 || curDay === 6) {
     return true;
   }
   else {
