@@ -1,12 +1,14 @@
 /**
 *
 * Monitor your sites and track their up time with response codes.
+* @author Ido Green | @greenido
+* 
 * @see: http://greenido.wordpress.com/2014/04/29/monitor-your-site-with-apps-script/
-*
+* 
 */ 
 
 //
-//
+// Let the user control the monitor: start and stop function.
 //
 function onOpen() {  
   var sheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -24,11 +26,9 @@ function onOpen() {
 function init() {    
   removeJobs(true);
   var sheet = SpreadsheetApp.getActiveSpreadsheet();
-  
   var urls = sheet.getSheets()[0].getRange("B2").getValue();
-  
   urls = urls.replace(/\s/g, "").split(",");
-  var time = (new Date()).getTime();
+  //var time = (new Date()).getTime();
   var db = ScriptDb.getMyDb();
   
   for (i=0; i<urls.length; i++) {
@@ -37,7 +37,6 @@ function init() {
   
   // Setup trigger that runs every 5 minutes
   ScriptApp.newTrigger("monitor").timeBased().everyMinutes(5).create();
-  
   sheet.toast("The monitor of your website(s) is ON. You can exit this sheet.", "Initialized", -1);
 }
 
@@ -119,7 +118,7 @@ function logToSheet(url, message) {
   logSheet.getRange(row,1).setValue(time);
   logSheet.getRange(row,2).setValue(message + " : " + url);
   
-  var alert = "Site @greenido: " + url + " is " + message.toLowerCase() + " To stop emails: http://goo.gl/todo-your-own-sheet";
+  var alert = "Site: " + url + " is " + message.toLowerCase() + " To stop emails: http://goo.gl/todo-your-own-sheet";
   
   if (toStopEmails === "Yes") {
     Logger.log("We got an alert: " + alert + " But we are not sending emails!");
@@ -128,10 +127,13 @@ function logToSheet(url, message) {
     Logger.log("Send an alert: " + alert);
     MailApp.sendEmail(logSheet.getRange("B3").getValue(), "AGF Site " + message, alert);  
   }
-//  if (sheet.getRange("B4").getValue().toLowerCase() == "yes") {
-//    time = new Date(time.getTime() + 15000);
-//    CalendarApp.createEvent(alert, time, time).addSmsReminder(0); 
-//  }
+  
+  // If you have a sheet with a form this is the location to see if you 'stoped' the notifications
+  // 
+  //  if (sheet.getRange("B4").getValue().toLowerCase() == "yes") {
+  //    time = new Date(time.getTime() + 15000);
+  //    CalendarApp.createEvent(alert, time, time).addSmsReminder(0); 
+  //  }
   
   return;
 }
@@ -142,7 +144,7 @@ function logToSheet(url, message) {
 function secondCheck() {
   var triggers = ScriptApp.getProjectTriggers();
   for (var i=0; i<triggers.length; i++) {
-    if (triggers[i].getHandlerFunction() == "secondCheck") {
+    if (triggers[i].getHandlerFunction() === "secondCheck") {
       ScriptApp.deleteTrigger(triggers[i]);
     }
   }
@@ -164,7 +166,7 @@ function removeJobs(quiet) {
   
   while (true) {
     var result = db.query({}); 
-    if (result.getSize() == 0) {
+    if (result.getSize() === 0) {
       break;
     }
     while (result.hasNext()) {
