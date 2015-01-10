@@ -1,18 +1,21 @@
 /**
-* Fetch lego emails from Gmail and add YT videos and images per subject.
+* Fetch lego emails from Gmail and add YT videos and images (from google search) per subject.
+* 
 * @Author: Ido Green
 * @Date: JAN 2015
 *
 * Psst... follow the TODOs so it will work.
 */
 
+// Fetch 'only' the last 300 emails in that specific label.
+var MAX_EMAILS = 300;
 
 /**
  * Main menu
  */
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
-  ui.createMenu('אמיר לגו חלל')
+  ui.createMenu(' לגו חלל')
       .addItem('הבא מיילים', 'getLegoMsg')
       .addToUi();
 }
@@ -24,7 +27,7 @@ function getLegoMsg() {
  var ss = SpreadsheetApp.getActiveSheet();
 
  var label = GmailApp.getUserLabelByName("LEGO");
- var threads = label.getThreads(0, 30);
+ var threads = label.getThreads(0, MAX_EMAILS);
  var j=2;
  for (var i = 0; i < threads.length; i++) {
    var subject = threads[i].getFirstMessageSubject();
