@@ -38,7 +38,7 @@ foreach ($files as $name) {
   if (strpos($name, "AppsScript/" ) > 0) {
     if ( !strpos($name, ".DS_Store") ) {
       $name = str_replace("./AppsScript/", "", $name);
-      $fName = "* " . $gitPathPre . "/" . $name . "\n";
+      $fName = "* ($name)[" . $gitPathPre . "/" . $name . "]\n";
       array_push($fullList, $fName );
       file_put_contents($mdFileName, $fName, FILE_APPEND);
     }
