@@ -27,13 +27,10 @@
  * spreadsheet with the API response, then locks columns and rows that will
  * define a chart axes. A stacked column chart is added for the spreadsheet.
  
- 
  @see: 
  * https://developers.google.com/youtube/analytics/v1/code_samples/apps-script
  * https://developers.google.com/youtube/analytics/sample-requests#channel-time-based-reports
  * https://developers.google.com/apis-explorer/#p/youtubeAnalytics/v1/youtubeAnalytics.reports.query
- 
- 
  */
 function spreadsheetAnalytics() {
   // Get the channel ID
@@ -114,7 +111,6 @@ function spreadsheetAnalytics() {
                    .setPosition(4, 2, 10, 10)
                    .build();
   sheet.insertChart(chart);
-
 }
 
 //
@@ -175,7 +171,7 @@ function fetchAllData() {
   // let's run on the rows after the header row
   for (var i = 1; i <= totalRows - 1; i++) {
     // e.g. for a call: https://gdata.youtube.com/feeds/api/videos/YIgSucMNFAo?v=2&prettyprint=true
-    if (ytVal[i] == "") {
+    if (ytVal[i] === "") {
       Logger.log("We stopped at row: " + (i+1));
       break;
     }
