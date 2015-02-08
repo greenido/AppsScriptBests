@@ -5,48 +5,75 @@
 */
 
 
+
 /**
+* 0. Delete all the old/current events.
 * 1. Run on your tickers
 * 2. Fetch the eraning call for each.
 * 3. Create a cal event.
 */
-function run() {
+function createEraningCallsEvents() {
+  
+  // start with a clean cal
+  deleteAllEarningEvents();
+  
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName("metaData"); 
-  var earningCalendar = CalendarApp.getCalendarById("TODO");
+  var earningCalendar = CalendarApp.getCalendarById("TODO-email");
+  
   var tickers = sheet.getRange("A:A");
   var values = tickers.getValues();
   
   for (var row in values) {
-    var curTicker = values[row][0];
-    Logger.log(row +") Working ticker: " + curTicker);
-    if (curTicker == "" || curTicker.length < 1) {
+    var ticker = values[row][0];
+    Logger.log(row +") Working ticker: " + ticker);
+    if (ticker === "" || ticker.length < 1) {
       break;
     }
     
-    // Get the earning date
-    
-    
-    // Update a new event for this date
+    // get the earning date
+    var d = getEarningDate(ticker);
+    if (d !== "N/A") {
+      // update a new event for this date
+      createEvent(earningCalendar, d, ticker);
+    }
+    else {
+      Logger.log("Could not add event for: " + ticker + " because didn't get a date");
+    }
   }
   
 }
 
-/*
-                year, month, day, hour, minute, second, millisecond
-var d = new Date(99,   5,     24,  11,    33,    30,    0);
-*/
-
 //
+// Delete all the events we currently have in our cal.
 //
-//
-function testGetEarningDate()  {
-  getEarningDate("LULU");
-  getEarningDate("LVS");
+function deleteAllEarningEvents() {
+  var earningCalendar = CalendarApp.getCalendarById("TODO-email");
+  var now = new Date();
+  var aYearFromNow = new Date(now.getTime() + (365 * 24 * 60 * 60 * 1000));
+  var events = earningCalendar.getEvents(now, aYearFromNow, {search: 'Earning call'});
+  Logger.log('Number of events: ' + events.length);
+  for (var i=0; i < events.length; i++) {
+    events[i].deleteEvent();
+  }
+  Logger.log("Removed all the events");
 }
 
 //
+// unit test for getting the date from finviz
 //
+function testGetEarningDate()  {
+  var d1 = getEarningDate("GOLD");
+  Logger.log("GOLD for: " + JSON.stringify(d1));
+  
+  var d2 = getEarningDate("LVS");
+  Logger.log("LVS for: " + JSON.stringify(d2));
+}
+
+//
+// Return the eraning date
+//                  year, month, day, hour, minute, second, millisecond
+//  var d = new Date(99,   5,     24,  11,    33,    30,    0);
 //
 function getEarningDate(ticker) {
   try {
@@ -64,28 +91,51 @@ function getEarningDate(ticker) {
     Logger.log("Stock: " + ticker + " | Date: " + dateStr);
     
     var dateMonth = dateStr.substring(0,3);
+    var dateDay = dateStr.substring(4);
     var dateMonthNum = "JanFebMarAprMayJunJulAugSepOctNovDec".indexOf(dateMonth) / 3 + 1 ;
     
-    var curMonth = new Date.now().getMonth() + 1; // 0-11
-    
+    var curMonth = ( (new Date()).getMonth() ) + 1; // 0-11
+    var curYear = (new Date()).getYear();
     var monthsGap = dateMonthNum - curMonth;
 
-    return dateStr;      
+    if (monthsGap >= 0 && monthsGap < 5) {
+      var d = new Date( curYear, dateMonthNum - 1, dateDay , 22, 30, 00, 0);
+      return d;
+    } else {
+      if (curMonth > 9) {
+        // let's check if we have a month 10,11,12 or later: 1,2,3
+        if (dateMonthNum > 9 || dateMonthNum <= 12) {
+          var d = new Date( curYear, dateMonthNum - 1, dateDay , 22, 30, 00, 0);
+          return d;
+        } else {
+          if (dateMonthNum > 0 || dateMonthNum <= 3) {
+            var d = new Date( curYear+1, dateMonthNum - 1, dateDay , 22, 30, 00, 0);
+            return d;
+          }
+        }
+      }
+      else {
+        Logger.log("** Warning: The earning month is: " + dateMonth +
+                "  (and we are at: " + curMonth +
+                ") which does not make sense - so we skip it");
+      }
+    }
+         
   }
   catch(err) {
-    Logger.log("Err: Could not get the date from " + urlToFetch + " * Err: " + JSON.stringify(err));
-    return "N/A";
-
+    Logger.log("Err: Could not get the date from " + urlToFetch +
+            " * Err: " + JSON.stringify(err));
   }
   
+  return "N/A";  
 }
 
 
 //
-//
+// Helper function to get cal id/name/params
 //
 function findOurCal() {
-  var calendar = CalendarApp.getCalendarById("TODO");
+  var calendar = CalendarApp.getCalendarById("TODO-email");
   Logger.log('** The calendar is named "%s".', calendar.getName());
   
   var calendars = CalendarApp.getCalendarsByName('Earnings Release');
@@ -94,26 +144,34 @@ function findOurCal() {
   Logger.log("It got Id: " + calendars[0].getId());
 }
 
+//
+// Unit test for creating a new calendar event
+//
+function testCreateEvent() {
+  var calendar = CalendarApp.getCalendarById("TODO-email");
+  var d = new Date( 2015, 1, 10 , 20, 30, 00, 0);
+  createEvent(calendar, d, "MOMO");
+}
 
-//////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Creates a simple calendar event - requires modify permissions on the
- * calendar in question.
+ * Creates a  calendar event for the Eraning call
  * For more information on using Calendar events, see
  * https://developers.google.com/apps-script/class_calendarevent.
+ * @param {type} cal - our cal for this calls
+ * @param {type} sDate - the start date for the event
+ * @param {type} ticker - the ticker for the company
+ * @returns nothing
  */
-function createEvent(calendarId) {
-  var cal = CalendarApp.getCalendarById(calendarId);
-  var title = 'Script Demo Event';
-  var start = new Date("April 1, 2012 08:00:00 PDT");
-  var end = new Date("April 1, 2012 10:00:00 PDT");
-  var desc = 'Created using Google Apps Script';
-  var loc = 'Script Center';
+function createEvent(cal, sDate, ticker) {
+  var title = 'Earning call: ' + ticker;
+  var start = sDate;
+  var end = new Date(sDate.getTime() + (30 * 60 * 1000));
+  var desc = 'Earning Call for ' + ticker;
 
   var event = cal.createEvent(title, start, end, {
-      description : desc,
-      location : loc
+      description : desc
   });
+  Logger.log("Created event: " + JSON.stringify(event));
 };
 
 /**
