@@ -1,9 +1,8 @@
 /**
 * Fetch Earning Calls dates and put them on Google Calander
-* @Author: Ido Green
+* @Author: Ido Green | @greenido | +GreenIdo
 * @Date: Feb 2015
 */
-
 
 
 /**
@@ -40,8 +39,7 @@ function createEraningCallsEvents() {
     else {
       Logger.log("Could not add event for: " + ticker + " because didn't get a date");
     }
-  }
-  
+  }  
 }
 
 //
@@ -92,6 +90,8 @@ function getEarningDate(ticker) {
     
     var dateMonth = dateStr.substring(0,3);
     var dateDay = dateStr.substring(4);
+    
+    // convert 3 letters month into a number (1-12) of the month.
     var dateMonthNum = "JanFebMarAprMayJunJulAugSepOctNovDec".indexOf(dateMonth) / 3 + 1 ;
     
     var curMonth = ( (new Date()).getMonth() ) + 1; // 0-11
@@ -150,7 +150,7 @@ function findOurCal() {
 function testCreateEvent() {
   var calendar = CalendarApp.getCalendarById("TODO-email");
   var d = new Date( 2015, 1, 10 , 20, 30, 00, 0);
-  createEvent(calendar, d, "MOMO");
+  createEvent(calendar, d, "Testing 123");
 }
 
 /**
