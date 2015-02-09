@@ -4,10 +4,10 @@ AppsScriptBests
 A little repo to keep track on Google Apps scripts. Mainly, to see what are a good ways to solve common challanges.
 
 See: http://greenido.wordpress.com/?s=apps+script to read more.
-Few Examples:
-1. https://greenido.wordpress.com/2014/08/04/youtube-analytics-dashboard-with-apps-script/
-2. https://greenido.wordpress.com/2014/04/29/monitor-your-site-with-apps-script/
-3. https://greenido.wordpress.com/2013/07/24/big-query-power-with-javascript/
+===Few Examples:
+* https://greenido.wordpress.com/2014/08/04/youtube-analytics-dashboard-with-apps-script/
+* https://greenido.wordpress.com/2014/04/29/monitor-your-site-with-apps-script/
+* https://greenido.wordpress.com/2013/07/24/big-query-power-with-javascript/
 
 <h2>The current components</h2>
 * [Apps](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Apps)
