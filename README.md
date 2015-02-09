@@ -15,6 +15,8 @@ See: http://greenido.wordpress.com/?s=apps+script to read more.
 * [Apps/EventsDateManager.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Apps/EventsDateManager.js)
 * [Apps/Insta2Drive.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Apps/Insta2Drive.js)
 * [Apps/SiteMonitor.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Apps/SiteMonitor.js)
+* [Gcal](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Gcal)
+* [Gcal/EarningCalls.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Gcal/EarningCalls.js)
 * [Search](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Search)
 * [Search/lego.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Search/lego.js)
 * [UI](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/UI)
@@ -29,8 +31,11 @@ See: http://greenido.wordpress.com/?s=apps+script to read more.
 * [YouTube](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/YouTube)
 * [YouTube/ytStats.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/YouTube/ytStats.js)
 
-
-<h2>Todo - build a wish list with ideas for libs/components</h2>
+<h2>Todo</h2>
+<ul>
+<li>Build a wish list with ideas for libs.</li>
+<li>A list for components</li>
+</ul>
 
 <h3>Other Sources</h3>
 <ul>
