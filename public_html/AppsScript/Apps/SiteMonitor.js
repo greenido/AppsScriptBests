@@ -1,6 +1,9 @@
 /**
 *
 * Monitor your sites and track their up time with response codes.
+* We can control the flow of the emails' alerts from a google form that will give us the option
+* to mute.
+* 
 * @author Ido Green | @greenido
 * 
 * @see: http://greenido.wordpress.com/2014/04/29/monitor-your-site-with-apps-script/
@@ -102,8 +105,8 @@ function checkAndNotify(item, code) {
 }
 
 //
-//
-//
+// /use our sheet as the logger to make it easy to debreif cases.
+// 
 function logToSheet(url, message) {
   
   var sheets = SpreadsheetApp.getActiveSpreadsheet();
