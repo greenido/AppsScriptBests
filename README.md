@@ -1,7 +1,7 @@
 AppsScriptBests
 ===============
 
-A little repo to keep track on Google Apps scripts. Mainly, to see what are a good ways to solve common challanges.
+A little repo to keep track on Google Apps scripts. Mainly, to see what are a good ways to solve common challenges.
 
 See: http://greenido.wordpress.com/?s=apps+script to read more.
 <h4>Few Examples</h4>
@@ -31,12 +31,6 @@ See: http://greenido.wordpress.com/?s=apps+script to read more.
 * [YouTube](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/YouTube)
 * [YouTube/ytStats.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/YouTube/ytStats.js)
 
-<h2>Todo</h2>
-<ul>
-<li>Build a wish list with ideas for libs.</li>
-<li>A list for components</li>
-</ul>
-
 <h3>Other Sources</h3>
 <ul>
   <li><a href="https://sites.google.com/site/scriptsexamples/custom-methods/2d-arrays-library">2D Arrays</a></li>
@@ -49,11 +43,13 @@ See: http://greenido.wordpress.com/?s=apps+script to read more.
   </li>
 </ul>
 
-TODO
-====
+###Todo
+
   1. Use a side bar to hold the menu for all the content
   2. Allow a short html/markup explanation page per module
   3. Add an example to track a form and send an email when new ppl filled it.
   4. Add an example to track PSI.
-  
+  5. Build a wish list with ideas for libs.
+
+
 
