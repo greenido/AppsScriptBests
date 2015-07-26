@@ -53,3 +53,5 @@ See: http://greenido.wordpress.com/?s=apps+script to read more.
 
 
 
+[![Analytics](https://ga-beacon.appspot.com/UA-65622529-1/AppsScriptBests/main)](https://github.com/igrigorik/ga-beacon)
+
