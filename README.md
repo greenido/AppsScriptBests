@@ -1,7 +1,8 @@
-AppsScriptBests
-===============
+###AppsScriptBests
+===================
 
-A little repo to keep track on Google Apps scripts. Mainly, to see what are a good ways to solve common challenges.
+A little repo to keep track on Google Apps scripts. 
+Mainly, to see what are a good ways to solve common challenges.
 
 See: http://greenido.wordpress.com/?s=apps+script to read more.
 <h4>Few Examples</h4>
