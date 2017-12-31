@@ -6,6 +6,7 @@ Mainly, to see what are a good ways to solve common challenges.
 
 See: http://greenido.wordpress.com/?s=apps+script to read more.
 <h4>Few Examples</h4>
+
 * <a href="https://greenido.wordpress.com/2014/08/04/youtube-analytics-dashboard-with-apps-script/">Youtube Analytics Dashboard With Apps Script</a>
 
 * https://greenido.wordpress.com/2014/04/29/monitor-your-site-with-apps-script/
