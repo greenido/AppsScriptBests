@@ -5,15 +5,16 @@ A little repo to keep track on Google Apps scripts.
 Mainly, to see what are a good ways to solve common challenges.
 
 See: http://greenido.wordpress.com/?s=apps+script to read more.
-<h4>Few Examples</h4>
+### Few Examples
 
-* <a href="https://greenido.wordpress.com/2014/08/04/youtube-analytics-dashboard-with-apps-script/">Youtube Analytics Dashboard With Apps Script</a>
+  * [Youtube Analytics Dashboard With Apps Script](https://greenido.wordpress.com/2014/08/04/youtube-analytics-dashboard-with-apps-script)
 
-* https://greenido.wordpress.com/2014/04/29/monitor-your-site-with-apps-script/
+  * https://greenido.wordpress.com/2014/04/29/monitor-your-site-with-apps-script/
 
-* https://greenido.wordpress.com/2013/07/24/big-query-power-with-javascript/
+  * https://greenido.wordpress.com/2013/07/24/big-query-power-with-javascript/
 
-<h2>The current components</h2>
+## Current components
+
   * [Apps](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Apps)
   * [Apps/EventManager.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Apps/EventManager.js)
   * [Apps/EventsDateManager.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/Apps/EventsDateManager.js)
@@ -35,7 +36,7 @@ See: http://greenido.wordpress.com/?s=apps+script to read more.
   * [YouTube](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/YouTube)
   * [YouTube/ytStats.js](https://github.com/greenido/AppsScriptBests/tree/master/public_html/AppsScript/YouTube/ytStats.js)
 
-<h3>Other Sources</h3>
+### Other Sources 
 <ul>
   <li><a href="https://sites.google.com/site/scriptsexamples/custom-methods/2d-arrays-library">2D Arrays</a></li>
   
